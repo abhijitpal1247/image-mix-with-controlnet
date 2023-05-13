@@ -27,20 +27,23 @@ def upload_file():
             if isinstance(style_image, bytes):
                 show_file_style.image(style_image)
     options = None
-    if style_file:
-        generate_captions_button = st.button("Compute styles/captions from the style image")
-        if generate_captions_button:
-            if style_file:
-                captions = generate_captions(style_file)
-                options = st.multiselect(
-                    'Select relevant captions/styles',
-                    captions.split(','))
-    if options:
-        generate_images_button = st.button("Generate image for the given style and content")
-        if generate_images_button:
-            if content_file:
-                generated_image = generate_stylized_image(', '.join(options), content_file)
-                st.image(generated_image)
+    with image_columns[1]:
+        if style_file:
+            generate_captions_button = st.button("Compute styles/captions from the style image")
+            if generate_captions_button:
+                with st.spinner('Wait for it...'):
+                    if style_file:
+                        captions = generate_captions(style_file)
+                        options = st.multiselect(
+                            'Select relevant captions/styles',
+                            captions.split(','))
+                st.success('Done')
+        if options:
+            generate_images_button = st.button("Generate image for the given style and content")
+            if generate_images_button:
+                if content_file:
+                    generated_image = generate_stylized_image(', '.join(options), content_file)
+                    st.image(generated_image)
 
 
 if __name__ == '__main__':
