@@ -1,7 +1,7 @@
 import torch
 from diffusers.utils import load_image
 from controlnet_aux import PidiNetDetector, HEDdetector
-
+from PIL import Image
 from diffusers import (
     ControlNetModel,
     StableDiffusionControlNetPipeline,
@@ -9,9 +9,9 @@ from diffusers import (
 )
 
 
-def generate_stylized_image(prompt, image_path):
+def generate_stylized_image(prompt, image_bytes):
     checkpoint = 'lllyasviel/control_v11p_sd15_softedge'
-    image = load_image(image_path)
+    image = Image.open(image_bytes)
 
     #processor = HEDdetector.from_pretrained('lllyasviel/Annotators')
     processor = PidiNetDetector.from_pretrained('lllyasviel/Annotators')
