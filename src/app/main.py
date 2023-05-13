@@ -14,7 +14,7 @@ def run():
         if content_file:
             content_image = content_file.getvalue()
             if isinstance(content_image, bytes):
-                show_file_content.image(content_file)
+                show_file_content.image(content_image)
 
     with image_columns[1]:
         style_file = st.file_uploader("Upload style file", type=['jpg', 'png', 'jpeg'])
