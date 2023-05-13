@@ -29,7 +29,7 @@ def upload_file():
         generate_captions_button = st.button("Compute styles/captions from the style image")
         if generate_captions_button:
             if style_file:
-                captions = generate_captions(style_image.getvalue())
+                captions = generate_captions(style_image)
                 options = st.multiselect(
                     'Select relevant captions/styles',
                     captions.split(','))
@@ -37,7 +37,7 @@ def upload_file():
         generate_images_button = st.button("Generate image for the given style and content")
         if generate_images_button:
             if content_file:
-                generated_image = generate_stylized_image(', '.join(options), content_file.getvalue())
+                generated_image = generate_stylized_image(', '.join(options), content_image)
                 st.image(generated_image)
 
 
