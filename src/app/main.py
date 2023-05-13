@@ -21,25 +21,31 @@ def run():
         show_file_style = st.empty()
         if not style_file:
             show_file_style.info("Please Upload a file {}".format(' '.join(['jpg', 'png', 'jpeg'])))
+            if "options" in st.session_state:
+                del st.session_state.options
+            if 'selected' in st.session_state:
+                del st.session_state.selected
         if style_file:
             style_image = style_file.getvalue()
             if isinstance(style_image, bytes):
                 show_file_style.image(style_image)
     show_gen_image = st.empty()
     with st.sidebar:
-        caption_generate_button = st.button('Generate Captions/Styles')
         if "options" not in st.session_state:
             st.session_state.options = []
+        st.session_state.button_state = False
+        caption_generate_button = st.button('Generate Captions/Styles', disabled=st.session_state.button_state)
         if caption_generate_button:
             with st.spinner('Generating Captions'):
-                caption_generate_button.disabled = True
-                st.session_state.options = generate_captions(style_file)
-                caption_generate_button.disabled = False
+                st.session_state.button_state = True
+                st.session_state.options = generate_captions(style_file).split(',')
+                st.session_state.button_state = False
         options_multiselect = st.multiselect('Please select the captions/styles', st.session_state.options,
                                              key='selected')
         generate_image_button = st.button('Generate stylized image')
         if generate_image_button and options_multiselect:
-            generated_image = generate_stylized_image(', '.join(options_multiselect), content_file)
+            with st.spinner('Generating Image'):
+                generated_image = generate_stylized_image(', '.join(options_multiselect), content_file)
             show_gen_image.image(generated_image, caption='generated image')
 
 
