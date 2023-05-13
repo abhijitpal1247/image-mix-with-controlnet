@@ -1,7 +1,4 @@
 import streamlit as st
-from io import BytesIO
-from PIL import Image
-import src
 from src.models.caption_retrieval import generate_captions
 from src.models.controlnet_generator import generate_stylized_image
 
@@ -28,18 +25,18 @@ def upload_file():
             if isinstance(style_image, bytes):
                 show_file_style.image(style_image)
     options = None
-    generate_captions_button = st.button("Compute styles/captions from the style image")
-    if generate_captions_button:
-        if style_file:
-            captions = generate_captions(style_image.getvalue())
-            options = st.multiselect(
-                'Select relevant captions/styles',
-                captions.split(','))
-
-    generate_images_button = st.button("Generate image for the given style and content")
-    if generate_images_button:
-        if content_file:
-            if options:
+    if style_file:
+        generate_captions_button = st.button("Compute styles/captions from the style image")
+        if generate_captions_button:
+            if style_file:
+                captions = generate_captions(style_image.getvalue())
+                options = st.multiselect(
+                    'Select relevant captions/styles',
+                    captions.split(','))
+    if options:
+        generate_images_button = st.button("Generate image for the given style and content")
+        if generate_images_button:
+            if content_file:
                 generated_image = generate_stylized_image(', '.join(options), content_file.getvalue())
                 st.image(generated_image)
 
