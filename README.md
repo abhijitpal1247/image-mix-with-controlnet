@@ -11,4 +11,5 @@ For making of this repo:
 * install the dependencies `pip install -e .`
 * run the app through `streamlit run src/app/main.py`
 
-[streamlit-record.webm](https://github.com/abhijitpal1247/image-mix-with-controlnet/assets/69110711/ed8b77f6-a9d7-444a-8117-64ebba3112fc)
+https://github.com/abhijitpal1247/image-mix-with-controlnet/assets/69110711/54669812-6977-43b6-a340-95d0b074c891
+
