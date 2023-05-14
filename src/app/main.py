@@ -34,14 +34,15 @@ def run():
     with st.sidebar:
         if "options" not in st.session_state:
             st.session_state.options = []
-        st.session_state.button_state = True
-        caption_generate_button = st.button('Generate tags/styles', disabled=not(st.session_state.button_state and style_file_bool))
+        st.session_state.tags_button_state = True
+        st.session_state.generate_button_state = True
+        caption_generate_button = st.button('Generate tags/styles', disabled=not(st.session_state.tags_button_state and style_file_bool))
         if caption_generate_button:
             with st.spinner('Generating tags/styles'):
-                st.session_state.button_state = False
+                st.session_state.tags_button_state = False
                 st.session_state.options = generate_captions(style_file).split(',')
                 st.session_state.selected = st.session_state.options
-                st.session_state.button_state = True
+                st.session_state.tags_button_state = True
 
         add_tag_text_box = st.text_input("Enter Function to be added to multiselect")
         add_tag_button = st.button('Add tag/style')
@@ -55,10 +56,12 @@ def run():
                                              st.session_state.options if "selected" not in st.session_state else st.session_state.selected,
                                              key='selected')
 
-        generate_image_button = st.button('Generate stylized image')
+        generate_image_button = st.button('Generate stylized image', disabled=not st.session_state.generate_button_state)
         if generate_image_button and options_multiselect and content_file_bool:
             with st.spinner('Generating Image'):
+                st.session_state.generate_button_state = False
                 generated_image = generate_stylized_image(', '.join(options_multiselect), content_file)
+                st.session_state.generate_button_state = True
             show_gen_image.image(generated_image, caption='generated image')
 
 
