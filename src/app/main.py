@@ -37,9 +37,10 @@ def run():
         st.session_state.button_state = True
         caption_generate_button = st.button('Generate tags/styles', disabled=not(st.session_state.button_state and style_file_bool))
         if caption_generate_button:
-            with st.spinner('Generating Captions'):
+            with st.spinner('Generating tags/styles'):
                 st.session_state.button_state = False
                 st.session_state.options = generate_captions(style_file).split(',')
+                st.session_state.selected = st.session_state.options
                 st.session_state.button_state = True
 
         add_tag_text_box = st.text_input("Enter Function to be added to multiselect")
