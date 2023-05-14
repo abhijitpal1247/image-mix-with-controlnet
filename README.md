@@ -11,6 +11,8 @@ For making of this repo:
 * install the dependencies `pip install -e .`
 * run the app through `streamlit run src/app/main.py`
 
+Added a colab notebook to run the streamlit app (interior_design_trial.ipynb)
+
 https://github.com/abhijitpal1247/image-mix-with-controlnet/assets/69110711/54669812-6977-43b6-a340-95d0b074c891
 
 Image credits: Downloaded from Pexels
