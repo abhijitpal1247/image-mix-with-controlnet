@@ -41,6 +41,7 @@ def run():
                 st.session_state.options = generate_captions(style_file).split(',')
                 st.session_state.button_state = False
         options_multiselect = st.multiselect('Please select the captions/styles', st.session_state.options,
+                                             st.session_state.options,
                                              key='selected')
         generate_image_button = st.button('Generate stylized image')
         if generate_image_button and options_multiselect:
