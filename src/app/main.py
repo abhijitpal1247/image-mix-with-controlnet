@@ -34,7 +34,6 @@ def run():
     with st.sidebar:
         if "options" not in st.session_state:
             st.session_state.options = []
-            st.session_state.selected = []
         st.session_state.button_state = True
         caption_generate_button = st.button('Generate tags/styles', disabled=not(st.session_state.button_state and style_file_bool))
         if caption_generate_button:
@@ -48,10 +47,11 @@ def run():
         if add_tag_text_box != "" and add_tag_button:
             if add_tag_text_box not in st.session_state.options:
                 st.session_state.options.append(add_tag_text_box)
-                st.session_state.selected.append(add_tag_text_box)
+                if "selected" in st.session_state:
+                    st.session_state.selected.append(add_tag_text_box)
 
         options_multiselect = st.multiselect('Please select the tags/styles', st.session_state.options,
-                                             st.session_state.selected,
+                                             st.session_state.options if "selected" not in st.session_state else st.session_state.selected,
                                              key='selected')
 
         generate_image_button = st.button('Generate stylized image')
