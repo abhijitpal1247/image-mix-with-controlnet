@@ -6,6 +6,8 @@ from PIL import Image
 
 def run():
     image_columns = st.columns((1, 1), gap="medium")
+    style_file_bool = False
+    content_file_bool = False
     with image_columns[0]:
         content_file = st.file_uploader("Upload content file", type=['jpg', 'png', 'jpeg'])
         show_file_content = st.empty()
@@ -14,6 +16,7 @@ def run():
         if content_file:
             content_image = content_file.getvalue()
             if isinstance(content_image, bytes):
+                content_file_bool = True
                 show_file_content.image(content_image)
 
     with image_columns[1]:
@@ -21,30 +24,36 @@ def run():
         show_file_style = st.empty()
         if not style_file:
             show_file_style.info("Please Upload a file {}".format(' '.join(['jpg', 'png', 'jpeg'])))
-            if "options" in st.session_state:
-                del st.session_state.options
-            if 'selected' in st.session_state:
-                del st.session_state.selected
         if style_file:
             style_image = style_file.getvalue()
             if isinstance(style_image, bytes):
+                style_file_bool = True
                 show_file_style.image(style_image)
+
     show_gen_image = st.empty()
     with st.sidebar:
         if "options" not in st.session_state:
             st.session_state.options = []
-        st.session_state.button_state = False
-        caption_generate_button = st.button('Generate Captions/Styles', disabled=st.session_state.button_state)
+        st.session_state.button_state = True
+        caption_generate_button = st.button('Generate tags/styles', disabled=not(st.session_state.button_state and style_file_bool))
         if caption_generate_button:
             with st.spinner('Generating Captions'):
-                st.session_state.button_state = True
-                st.session_state.options = generate_captions(style_file).split(',')
                 st.session_state.button_state = False
-        options_multiselect = st.multiselect('Please select the captions/styles', st.session_state.options,
+                st.session_state.options = generate_captions(style_file).split(',')
+                st.session_state.button_state = True
+
+        add_tag_text_box = st.text_input("Enter Function to be added to multiselect")
+        add_tag_button = st.button('Add tag/style')
+        if add_tag_text_box != "" and add_tag_button:
+            if add_tag_text_box not in st.session_state.options:
+                st.session_state.options.append(add_tag_text_box)
+
+        options_multiselect = st.multiselect('Please select the tags/styles', st.session_state.options,
                                              st.session_state.options,
                                              key='selected')
+
         generate_image_button = st.button('Generate stylized image')
-        if generate_image_button and options_multiselect:
+        if generate_image_button and options_multiselect and content_file_bool:
             with st.spinner('Generating Image'):
                 generated_image = generate_stylized_image(', '.join(options_multiselect), content_file)
             show_gen_image.image(generated_image, caption='generated image')
